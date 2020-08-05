@@ -42,7 +42,7 @@ interface RouteInterface
      * @param mixed $value
      * @return $this
      */
-    public function setAttribute(string $key, $value): self;
+    public function setAttributes(string $key, $value): self;
 
     /**
      * Get the destination of  this route.
