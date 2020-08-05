@@ -28,7 +28,7 @@ interface RouteInterface
 
 
     /**
-     * Get the attributes key/value from path.
+     * Get the attributes key/value.
      *
      * @return array
      */
@@ -36,7 +36,7 @@ interface RouteInterface
 
 
     /**
-     * Set an attribute key/value from path.
+     * Set an attribute key/value.
      *
      * @param string $key
      * @param mixed $value
