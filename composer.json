@@ -1,0 +1,30 @@
+{
+  "name": "pinoven/routing",
+  "description": "Pinoven Routing Component. Manage route as simple as it is.",
+  "minimum-stability": "stable",
+  "type": "library",
+  "keywords": ["routing", "router", "matcher"],
+  "license": ["MIT"],
+  "authors": [
+    {
+      "name": "Raphael Bergina(rbergDrox)",
+      "email": "pinoven@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">= 7.2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pinoven\\Routing\\": ["src/"]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Pinoven\\Routing\\": ["src/", "tests/"]
+    }
+  }
+}
