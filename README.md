@@ -28,6 +28,35 @@ The component is provided with a set of interface:
 
 ## Route
 
+```php
+
+$controller = new class {
+    public function hellWord() {
+    
+    }
+    public function newRoute() {
+   
+    } 
+};
+$route =  new \Pinoven\Routing\Route\Route('/my-route/{test}', [$controller, 'helloWord']);
+
+$routeWithAlias =  new \Pinoven\Routing\Route\Route('/my-next-route/{test1}/{test2}', [$controller, 'newRoute'], 'route-alias');
+```
+
+You can use getter/setter to change these values.
+
+You can add/update attributes on this route by using this:
+```php
+$controller = new class {
+    public function helloWord() {
+    
+    }
+};
+$route =  new \Pinoven\Routing\Route\Route('/my-route/{test}', [$controller, 'helloWord']);
+
+$route->setAttributes('priority', 4);
+```
+
 ## Matcher
 
 ## Router
