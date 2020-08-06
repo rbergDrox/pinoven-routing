@@ -9,7 +9,7 @@ use Pinoven\Routing\Route\RouteInterface;
  * Interface RouterInterface
  * @package Pinoven\Routing\Router
  */
-interface RouterInterface
+interface RouteInterface
 {
 
     /**
@@ -66,7 +66,7 @@ interface RouterInterface
      *
      * @param RouteMatcherInterface $routerStrategy
      * @return $this
-     * @see RouterInterface::find() Find method will use this strategy.
+     * @see RouteInterface::find() Find method will use this strategy.
      */
     public function setMatchRouteStrategy(RouteMatcherInterface $routerStrategy): self;
 }

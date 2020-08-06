@@ -80,7 +80,16 @@ class Route implements RouteInterface
     /**
      * @inheritDoc
      */
-    public function setAttributes(string $key, $value): RouteInterface
+    public function setAttributes(array $attributes): RouteInterface
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAttribute(string $key, $value): RouteInterface
     {
         $this->attributes[$key] = $value;
         return $this;

@@ -28,8 +28,10 @@ class RouteTest extends TestCase
         $route->setDestination([$controller, 'helloWorld2']);
         $this->assertEquals('Hello world John', ($route->getDestination())('John'));
         $this->assertEmpty($route->getAttributes());
-        $route->setAttributes('priority', 4);
+        $route->setAttributes(['priority' => 4]);
         $this->assertEquals(4, $route->getAttributes()['priority']);
+        $route->setAttribute('priority', 6);
+        $this->assertEquals(6, $route->getAttributes()['priority']);
         $this->assertNull($route->getAlias());
         $route->setAlias('myRoute');
         $this->assertEquals('myRoute', $route->getAlias());
