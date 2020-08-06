@@ -19,7 +19,7 @@ The component is provided with a set of interface:
 \Pinoven\Routing\Route\RouteInterface::class;
 
 // Describe element that have to be in a router and nothing else.
-\Pinoven\Routing\Router\RouterInterface::class;
+\Pinoven\Routing\Router\RouteInterface::class;
 
 // Should be use by the router to match a route.
 \Pinoven\Routing\Router\RouteMatcherInterface::class;
@@ -27,6 +27,8 @@ The component is provided with a set of interface:
 ```
 
 ## Route
+
+### Definition
 
 ```php
 
@@ -56,7 +58,28 @@ $route =  new \Pinoven\Routing\Route\Route('/my-route/{test}', [$controller, 'he
 
 $route->setAttributes('priority', 4);
 ```
+### Factory
 
+By using an array you can create a route:
+
+```php
+use Pinoven\Routing\Route\RouteFactory;
+
+$controller = new class {
+    // ... Controller definition
+};
+$routeFactory = new RouteFactory();
+$config = [
+    'path' => '/hello/{name}',
+    'alias' => 'mon-alias',
+    'destination' => [$controller, 'methodToCall'],
+    'attributes' => [
+        'priority' => 6,
+        'enabled' => false,
+    ]
+];
+$route = $routeFactory->configure($config);
+```
 ## Matcher
 
 ## Router
