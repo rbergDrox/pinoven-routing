@@ -4,6 +4,7 @@
 namespace Pinoven\Routing\Route;
 
 use ReflectionException;
+use ReflectionMethod;
 
 /**
  * Interface RouteFactory
@@ -16,6 +17,7 @@ class RouteFactory implements RouteFactoryInterface
     /**
      * @inheritDoc
      * @throws RouteConfigurationException If `path`, `destination` are missing.
+     * @throws ReflectionException  Can retrieve methods and set parameters for the route.
      */
     public function configure(array $routeConfiguration): RouteInterface
     {
@@ -45,28 +47,54 @@ class RouteFactory implements RouteFactoryInterface
      *
      * @param array $settings
      * @param RouteInterface|null $route
+     * @param bool $overridePath
+     * @param bool $overrideDestination
+     * @param bool $overrideAlias
      * @return Route|RouteInterface|null
      * @throws ReflectionException Can retrieve method from route.
      */
-    public static function routeFromSettings(array $settings, ?RouteInterface $route = null)
-    {
+    public static function routeFromSettings(
+        array $settings,
+        ?RouteInterface $route = null,
+        bool $overridePath = false,
+        bool $overrideDestination = false,
+        bool $overrideAlias = false
+    ) {
         $route = $route ? : self::createRoute($settings);
-        unset($settings['path']);
-        unset($settings['destination']);
-        unset($settings['alias']);
+        if (!$overridePath) {
+            unset($settings['path']);
+        }
+        if (!$overrideDestination) {
+            unset($settings['destination']);
+        }
+        if (!$overrideAlias && $route->getAlias()) {
+            unset($settings['alias']);
+        }
+        self::routeConfigBySetter($route, $settings);
+        return $route;
+    }
+
+    /**
+     * Update route attributes by using setters.
+     *
+     * @param RouteInterface $route
+     * @param array $settings
+     * @throws ReflectionException
+     */
+    protected static function routeConfigBySetter(RouteInterface $route, array $settings)
+    {
         foreach ($settings as $settingKey => $settingValue) {
             $method = 'set' . ucfirst($settingKey);
-
+            $countOfParameters = null;
             if (method_exists($route, $method)) {
-                $reflectionMethod = new \ReflectionMethod($route, $method);
+                $reflectionMethod = new ReflectionMethod($route, $method);
                 $countOfParameters = $reflectionMethod->getNumberOfParameters();
-                if ($countOfParameters === 1) {
-                    $route->{$method}($settingValue);
-                } elseif ($countOfParameters > 1) {
-                    $route->{$method}(...$settingValue);
-                }
+            }
+            if ($countOfParameters === 1) {
+                $route->{$method}($settingValue);
+            } elseif ($countOfParameters > 1) {
+                $route->{$method}(...$settingValue);
             }
         }
-        return $route;
     }
 }

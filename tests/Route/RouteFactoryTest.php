@@ -76,4 +76,60 @@ class RouteFactoryTest extends TestCase
         $this->expectExceptionMessage('`destination` is missing');
         $routeFactory->configure($config);
     }
+
+    public function testConfigureRouteWithMethodsMultiArgs()
+    {
+        $route = new class('/path/test', [$this->controller, 'helloWord']) extends Route {
+
+            public $test = [];
+            public $test2 = [];
+            public $test3 = [];
+
+            public function setTest($test, $test2, $test3)
+            {
+                $this->test = [$test, $test2, $test3];
+            }
+
+            public function setTest2($test)
+            {
+                $this->test2 = [$test];
+            }
+
+            public function setTest3($test, $test2)
+            {
+                $this->test3 = [$test, $test2];
+            }
+        };
+        $config = [
+            'path' => '/hello/{name}',
+            'alias' => 'mon-alias',
+            'destination' => [$this->controller, 'helloWorld2'],
+            'test' => [1, 2, 3],
+            'test2' => [4, 5],
+            'test3' => [6, 7]
+        ];
+        $this->assertEquals('/path/test', $route->getPath());
+        $this->assertEquals('John', ($route->getDestination())('John'));
+        $this->assertNull($route->getAlias());
+        RouteFactory::routeFromSettings($config, $route);
+        $this->assertEquals('/path/test', $route->getPath());
+        $this->assertEquals('John', ($route->getDestination())('John'));
+        $this->assertEquals($config['alias'], $route->getAlias());
+        $this->assertEquals([1, 2, 3], $route->test);
+        $this->assertEquals([[4, 5]], $route->test2);
+        $this->assertEquals([6, 7], $route->test3);
+
+        $config2 = [
+            'path' => '/hello/{name}',
+            'alias' => 'mon-alias-2',
+            'destination' => [$this->controller, 'helloWorld2'],
+            'test' => [1, 2, 3],
+            'test2' => [4, 5],
+            'test3' => [6, 7]
+        ];
+        RouteFactory::routeFromSettings($config2, $route, true, true, true);
+        $this->assertEquals($config2['path'], $route->getPath());
+        $this->assertEquals('Hello world John', ($route->getDestination())('John'));
+        $this->assertEquals($config2['alias'], $route->getAlias());
+    }
 }
