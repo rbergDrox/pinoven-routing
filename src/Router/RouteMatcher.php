@@ -50,23 +50,26 @@ class RouteMatcher implements RouteMatcherInterface
         $pattern = str_replace('/', '\/', $pattern);
         preg_match_all('/'. $pattern.'/i', $routeData->getPath(), $routeMatches);
         if ($routeMatches && isset($routeMatches[0][0])  && $routeMatches[0][0] === $routeData->getPath()) {
-            foreach ($routeMatches as $keyRouteMatch => $routeMatch) {
-                if ($keyRouteMatch === 0) {
-                    continue;
-                }
-                if (array_key_exists($keyRouteMatch, $attributes)) {
-                    $attributes[$keyRouteMatch] = $routeMatch[0];
-                }
-            }
+            $this->fillAttributes($attributes, $routeMatches);
         }
-        // Clean attributes having get no value.
-        $attributes = array_filter($attributes, function ($attr) {
+        $attributes = $this->filterAttributes($attributes);
+        return $attributes ? : null;
+    }
+
+    /**
+     * Clean attributes having get no value.
+     *
+     * @param array $attributes
+     * @return array
+     */
+    private function filterAttributes(array $attributes)
+    {
+        return array_filter($attributes, function ($attr) {
             if (is_null($attr)) {
                 return false;
             }
             return true;
         });
-        return $attributes ? : null;
     }
 
     /**
@@ -75,5 +78,23 @@ class RouteMatcher implements RouteMatcherInterface
     public function getRouteExpressions(): array
     {
         return $this->routeExpressions;
+    }
+
+    /**
+     * Modify $attributes to set value from $routeMatches
+     *
+     * @param array $attributes
+     * @param array $routeMatches
+     */
+    private function fillAttributes(array &$attributes, array $routeMatches)
+    {
+        foreach ($routeMatches as $keyRouteMatch => $routeMatch) {
+            if ($keyRouteMatch === 0) {
+                continue;
+            }
+            if (array_key_exists($keyRouteMatch, $attributes)) {
+                $attributes[$keyRouteMatch] = $routeMatch[0];
+            }
+        }
     }
 }
