@@ -40,25 +40,9 @@ class RouteMatcher implements RouteMatcherInterface
         preg_match_all('/'. $pattern.'/i', $routeData->getPath(), $routeMatches);
         if ($routeMatches && isset($routeMatches[0][0])  && $routeMatches[0][0] === $routeData->getPath()) {
             $this->fillAttributes($attributes, $routeMatches);
+            return $attributes;
         }
-        $attributes = $this->filterAttributes($attributes);
-        return $attributes ? : null;
-    }
-
-    /**
-     * Clean attributes having get no value.
-     *
-     * @param array $attributes
-     * @return array
-     */
-    private function filterAttributes(array $attributes)
-    {
-        return array_filter($attributes, function ($attr) {
-            if (is_null($attr)) {
-                return false;
-            }
-            return true;
-        });
+        return null;
     }
 
     /**
