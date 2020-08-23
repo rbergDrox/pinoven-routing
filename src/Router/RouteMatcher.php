@@ -65,6 +65,13 @@ class RouteMatcher implements RouteMatcherInterface
                 }
             }
         }
+        // Clean attributes having get no value.
+        $attributes = array_filter($attributes, function ($attr) {
+            if (is_null($attr)) {
+                return false;
+            }
+            return true;
+        });
         return $attributes ? : null;
     }
 
