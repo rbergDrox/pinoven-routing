@@ -33,19 +33,8 @@ class RouteMatcher implements RouteMatcherInterface
         if (!is_a($routeData, RouteRequestInterface::class)) {
             return null;
         }
-        $pattern = $route->getPath();
         $attributes = [];
-        foreach ($this->getRouteExpressions() as $routeExpression) {
-            $regex = "/({$routeExpression->start()}\w+{$routeExpression->end()})/i";
-            preg_match_all($regex, $route->getPath(), $matches);
-            foreach ($matches[1] as $match) {
-                /** @var string $attributeStart */
-                $attributeStart = substr($match, strlen($routeExpression->start()));
-                $attribute = substr($attributeStart, 0, strlen($attributeStart) - strlen($routeExpression->end()));
-                $attributes[$attribute] = null;
-                $pattern = str_replace($match, "(?P<{$attribute}>{$routeExpression->pattern()})", $pattern);
-            }
-        }
+        $pattern = $this->createRoutePattern($route, $attributes);
         $routeMatches = [];
         $pattern = str_replace('/', '\/', $pattern);
         preg_match_all('/'. $pattern.'/i', $routeData->getPath(), $routeMatches);
@@ -86,7 +75,7 @@ class RouteMatcher implements RouteMatcherInterface
      * @param array $attributes
      * @param array $routeMatches
      */
-    private function fillAttributes(array &$attributes, array $routeMatches)
+    protected function fillAttributes(array &$attributes, array $routeMatches)
     {
         foreach ($routeMatches as $keyRouteMatch => $routeMatch) {
             if ($keyRouteMatch === 0) {
@@ -96,5 +85,29 @@ class RouteMatcher implements RouteMatcherInterface
                 $attributes[$keyRouteMatch] = $routeMatch[0];
             }
         }
+    }
+
+    /**
+     * Get the pattern from route path. Fill out attributes.
+     *
+     * @param RouteInterface $route
+     * @param array $attributes
+     * @return string|string[]
+     */
+    protected function createRoutePattern(RouteInterface $route, array &$attributes)
+    {
+        $pattern = $route->getPath();
+        foreach ($this->getRouteExpressions() as $routeExpression) {
+            $regex = "/({$routeExpression->start()}\w+{$routeExpression->end()})/i";
+            preg_match_all($regex, $route->getPath(), $matches);
+            foreach ($matches[1] as $match) {
+                /** @var string $attributeStart */
+                $attributeStart = substr($match, strlen($routeExpression->start()));
+                $attribute = substr($attributeStart, 0, strlen($attributeStart) - strlen($routeExpression->end()));
+                $attributes[$attribute] = null;
+                $pattern = str_replace($match, "(?P<{$attribute}>{$routeExpression->pattern()})", $pattern);
+            }
+        }
+        return $pattern;
     }
 }
