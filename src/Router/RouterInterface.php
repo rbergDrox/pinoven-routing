@@ -9,7 +9,7 @@ use Pinoven\Routing\Route\RouteInterface;
  * Interface RouterInterface
  * @package Pinoven\Routing\Router
  */
-interface RouteInterface
+interface RouterInterface
 {
 
     /**
