@@ -63,7 +63,13 @@ class RouteRequest implements RouteRequestInterface
 
     public function getQuery(): ?string
     {
-        return parse_url($this->url, PHP_URL_QUERY);
+        $query = parse_url($this->url, PHP_URL_QUERY);
+        if (is_null($query) && $this->getFragment()) {
+            $fragment = parse_url($this->url, PHP_URL_FRAGMENT);
+            $fragmentMixedQuery =  strpos($fragment, '?');
+            $query =  $fragmentMixedQuery !== false ?  substr($fragment, $fragmentMixedQuery + 1) : null;
+        }
+        return $query;
     }
 
     /**
@@ -71,6 +77,11 @@ class RouteRequest implements RouteRequestInterface
      */
     public function getFragment(): ?string
     {
-        return parse_url($this->url, PHP_URL_FRAGMENT);
+        $fragment = parse_url($this->url, PHP_URL_FRAGMENT);
+        $fragmentMixedQuery =  strpos($fragment, '?');
+        if ($fragmentMixedQuery !== false) {
+            $fragment = substr($fragment, 0, $fragmentMixedQuery);
+        }
+        return $fragment;
     }
 }
