@@ -60,6 +60,12 @@ class RouteMatcherTest extends TestCase
         $routeRequest =  new RouteRequest('https://www.test.com/hello/julien');
         $value = $this->routeMatcher->match($routeRequest, $route);
         $this->assertNotNull($value);
+        $this->assertEquals(['name' => 'julien'], $value);
+        $route2 =  new Route('/hello/{name}/{digit:year}/{month}', [$this->controller, 'helloWord']);
+        $routeRequest2 =  new RouteRequest('https://www.test.com/hello/julien/2020/january');
+        $value = $this->routeMatcher->match($routeRequest2, $route2);
+        $this->assertNotNull($value);
+        $this->assertEquals(['name' => 'julien', 'year' => 2020, 'month' => 'january'], $value);
     }
 
     public function testRouteNotMatched()

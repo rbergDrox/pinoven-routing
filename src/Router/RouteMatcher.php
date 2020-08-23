@@ -36,20 +36,14 @@ class RouteMatcher implements RouteMatcherInterface
         $pattern = $route->getPath();
         $attributes = [];
         foreach ($this->getRouteExpressions() as $routeExpression) {
-            $regex = "/([{$routeExpression->start()}]{$routeExpression->pattern()}[{$routeExpression->end()}])/i";
+            $regex = "/({$routeExpression->start()}\w+{$routeExpression->end()})/i";
             preg_match_all($regex, $route->getPath(), $matches);
-            if ($matches && empty($matches[0][0])) {
-                continue;
-            }
-            foreach ($matches as $keyMatch => $match) {
-                if ($keyMatch === 0) {
-                    continue;
-                }
+            foreach ($matches[1] as $match) {
                 /** @var string $attributeStart */
-                $attributeStart = substr($match[0], strlen($routeExpression->start()));
+                $attributeStart = substr($match, strlen($routeExpression->start()));
                 $attribute = substr($attributeStart, 0, strlen($attributeStart) - strlen($routeExpression->end()));
                 $attributes[$attribute] = null;
-                $pattern = str_replace($match, "(?<{$attribute}>{$routeExpression->pattern()})", $pattern);
+                $pattern = str_replace($match, "(?P<{$attribute}>{$routeExpression->pattern()})", $pattern);
             }
         }
         $routeMatches = [];
