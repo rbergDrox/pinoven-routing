@@ -70,7 +70,7 @@ class RouteMatcher implements RouteMatcherInterface
     }
 
     /**
-     * Modify $attributes to set value from $routeMatches
+     * Modify $attributes to set value from $routeMatches.
      *
      * @param array $attributes
      * @param array $routeMatches
