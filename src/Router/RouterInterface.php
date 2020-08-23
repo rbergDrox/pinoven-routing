@@ -15,9 +15,9 @@ interface RouterInterface
     /**
      * Get list of routes.
      *
-     * @return iterable<RouteInterface>
+     * @return iterable<RouteInterface>|null
      */
-    public function routes(): iterable;
+    public function routes(): ?iterable;
 
     /**
      * Add a route to the list of routes.
@@ -48,10 +48,10 @@ interface RouterInterface
      * Find a route based on criteria.
      *
      * @param mixed $routeData
-     * @return RouteInterface
+     * @return RouteInterface|null
      * @see RouteMatcherInterface::match() Should be use there to check the list of routes.
      */
-    public function findOne($routeData): RouteInterface;
+    public function findOne($routeData): ?RouteInterface;
 
     /**
      * Get route by alias.
@@ -62,11 +62,9 @@ interface RouterInterface
     public function get(string $alias): ?RouteInterface;
 
     /**
-     * Define the strategy to find a route from the router.
+     * Get the strategy to find a route from the router.
      *
-     * @param RouteMatcherInterface $routerStrategy
-     * @return $this
      * @see RouteInterface::find() Find method will use this strategy.
      */
-    public function setMatchRouteStrategy(RouteMatcherInterface $routerStrategy): self;
+    public function getMatchRouteStrategy(): RouteMatcherInterface;
 }
