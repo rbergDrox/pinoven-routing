@@ -9,6 +9,8 @@ use Pinoven\Routing\Route\RouteInterface;
 use Pinoven\Routing\Router\RouteExpression\BracesRouteExpression;
 use Pinoven\Routing\Router\RouteExpression\RouteExpressionInterface;
 use Pinoven\Routing\Router\RouteRequest\RouteRequest;
+use Pinoven\Routing\Router\RouteRequest\RouteResult;
+use Pinoven\Routing\Router\RouteRequest\RouteResultInterface;
 
 class RouterTest extends TestCase
 {
@@ -136,8 +138,8 @@ class RouterTest extends TestCase
         ]);
         $this->router->add($route1)->add($route2)->add($route1dup);
         $routeRequest = new RouteRequest('https://www.test.com/hello/jhon');
-        $route = $this->router->findOne($routeRequest);
-        $this->assertEquals('/hello/{name}', $route->getPath());
+        $routeResult = $this->router->findOne($routeRequest);
+        $this->assertEquals('/hello/{name}', $routeResult->getRoute()->getPath());
     }
 
     public function testChangeRouteMatcher()
@@ -163,13 +165,13 @@ class RouterTest extends TestCase
             /**
              * @inheritDoc
              */
-            public function match($routeData, RouteInterface $route): ?array
+            public function match($routeData, RouteInterface $route): ?RouteResultInterface
             {
-                $test = null;
                 if ($routeData && $route) {
                     $test = ['name' => 'test'];
+                    return new RouteResult($route, $test);
                 }
-                return $test;
+                return null;
             }
         };
         $route = RouteFactory::routeFromSettings([

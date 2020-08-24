@@ -4,6 +4,7 @@
 namespace Pinoven\Routing\Router;
 
 use Pinoven\Routing\Route\RouteInterface;
+use Pinoven\Routing\Router\RouteRequest\RouteResultInterface;
 
 class Router implements RouterInterface
 {
@@ -69,7 +70,7 @@ class Router implements RouterInterface
             foreach ($this->routes as $route) {
                 $findRoute = $this->routeMatcher->match($routeData, $route);
                 if ($findRoute) {
-                    yield $route;
+                    yield $findRoute;
                 }
             }
         }
@@ -78,7 +79,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function findOne($routeData): ?RouteInterface
+    public function findOne($routeData): ?RouteResultInterface
     {
         $routes = $this->find($routeData);
         $findRoute = null;

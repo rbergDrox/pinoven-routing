@@ -6,6 +6,8 @@ namespace Pinoven\Routing\Router;
 use Pinoven\Routing\Router\RouteExpression\RouteExpressionInterface;
 use Pinoven\Routing\Route\RouteInterface;
 use Pinoven\Routing\Router\RouteRequest\RouteRequestInterface;
+use Pinoven\Routing\Router\RouteRequest\RouteResult;
+use Pinoven\Routing\Router\RouteRequest\RouteResultInterface;
 
 class RouteMatcher implements RouteMatcherInterface
 {
@@ -28,7 +30,7 @@ class RouteMatcher implements RouteMatcherInterface
     /**
      * @inheritDoc
      */
-    public function match($routeData, RouteInterface $route): ?array
+    public function match($routeData, RouteInterface $route): ?RouteResultInterface
     {
         if (!is_a($routeData, RouteRequestInterface::class)) {
             return null;
@@ -40,7 +42,7 @@ class RouteMatcher implements RouteMatcherInterface
         preg_match_all('/'. $pattern.'/i', $routeData->getPath(), $routeMatches);
         if ($routeMatches && isset($routeMatches[0][0])  && $routeMatches[0][0] === $routeData->getPath()) {
             $this->fillAttributes($attributes, $routeMatches);
-            return $attributes;
+            return new RouteResult($route, $attributes);
         }
         return null;
     }

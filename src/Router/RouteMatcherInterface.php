@@ -5,6 +5,7 @@ namespace Pinoven\Routing\Router;
 
 use Pinoven\Routing\Router\RouteExpression\RouteExpressionInterface;
 use Pinoven\Routing\Route\RouteInterface;
+use Pinoven\Routing\Router\RouteRequest\RouteResultInterface;
 
 /**
  * Define how to find a route base on route data we are trying to retrieve.
@@ -26,7 +27,7 @@ interface RouteMatcherInterface
      *
      * @param mixed $routeData
      * @param RouteInterface $route
-     * @return array|null
+     * @return RouteResultInterface|null
      */
-    public function match($routeData, RouteInterface $route): ?array;
+    public function match($routeData, RouteInterface $route): ?RouteResultInterface;
 }

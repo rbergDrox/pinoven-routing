@@ -60,18 +60,18 @@ class RouteMatcherTest extends TestCase
         $routeRequest =  new RouteRequest('https://www.test.com/hello/julien');
         $value = $this->routeMatcher->match($routeRequest, $route);
         $this->assertNotNull($value);
-        $this->assertEquals(['name' => 'julien'], $value);
+        $this->assertEquals(['name' => 'julien'], $value->getAttributes());
         $route2 =  new Route('/hello/{name}/{digit:year}/{month}', [$this->controller, 'helloWord']);
         $routeRequest2 =  new RouteRequest('https://www.test.com/hello/julien/2020/january');
         $value2 = $this->routeMatcher->match($routeRequest2, $route2);
         $this->assertNotNull($value2);
-        $this->assertEquals(['name' => 'julien', 'year' => 2020, 'month' => 'january'], $value2);
+        $this->assertEquals(['name' => 'julien', 'year' => 2020, 'month' => 'january'], $value2->getAttributes());
         // Test route without variables.
         $route3 =  new Route('/hello', [$this->controller, 'helloWord']);
         $routeRequest3 =  new RouteRequest('https://www.test.com/hello');
         $value3 = $this->routeMatcher->match($routeRequest3, $route3);
         $this->assertNotNull($value3);
-        $this->assertEquals([], $value3);
+        $this->assertEquals([], $value3->getAttributes());
     }
 
     public function testRouteNotMatched()

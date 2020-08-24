@@ -126,14 +126,20 @@ $router = new \Pinoven\Routing\Router\Router($matcher);
 $routeMatcher = new class implements \Pinoven\Routing\Router\RouteMatcherInterface {
      public function getRouteExpressions() : array{
     }
-    public function match($routeData,\Pinoven\Routing\Route\RouteInterface $route) : ?array{
+    public function match($routeData,\Pinoven\Routing\Route\RouteInterface $route) : ?\Pinoven\Routing\Router\RouteRequest\RouteResultInterface{
   
     }
 };
 // must implement RoutMatcherInterface
 $router->setMatchRouteStrategy($routeMatcher);
 ```
+### Route result
 
+Route matching a routing request will be wrapped to a `RouteResult` instance.
+That one implements :
+```php
+\Pinoven\Routing\Router\RouteRequest\RouteResultInterface::class;
+```
 
 # Contribution
  - Create issue: improvement + the reason why it should be implemented or issue + how to reproduce.

@@ -4,6 +4,7 @@
 namespace Pinoven\Routing\Router;
 
 use Pinoven\Routing\Route\RouteInterface;
+use Pinoven\Routing\Router\RouteRequest\RouteResultInterface;
 
 /**
  * Interface RouterInterface
@@ -38,7 +39,7 @@ interface RouterInterface
      * Find routes based on criteria.
      *
      * @param mixed $routeData
-     * @return iterable<RouteInterface>
+     * @return iterable<RouteResultInterface>
      * @see RouteMatcherInterface::match() Should be use there to check the list of routes.
      */
     public function find($routeData): iterable;
@@ -48,10 +49,10 @@ interface RouterInterface
      * Find a route based on criteria.
      *
      * @param mixed $routeData
-     * @return RouteInterface|null
+     * @return RouteResultInterface|null
      * @see RouteMatcherInterface::match() Should be use there to check the list of routes.
      */
-    public function findOne($routeData): ?RouteInterface;
+    public function findOne($routeData): ?RouteResultInterface;
 
     /**
      * Get route by alias.
