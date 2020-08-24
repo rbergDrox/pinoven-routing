@@ -80,9 +80,60 @@ $config = [
 ];
 $route = $routeFactory->configure($config);
 ```
+
 ## Matcher
+A route matcher is something that the router will use to found if a routing request has one or more route that can be bind.
+
+```php
+use Pinoven\Routing\Route\RouteFactory;
+
+$controller = new class {
+    // ... Controller definition
+};
+$routeFactory = new RouteFactory();
+$config = [
+    'path' => '/hello/{name}',
+    'alias' => 'mon-alias',
+    'destination' => [$controller, 'methodToCall']
+];
+$route = $routeFactory->configure($config);
+
+// Default expressions that can be used as delimiter for attributes.
+$defaultExpressions = [
+    new \Pinoven\Routing\Router\RouteExpression\BracesRouteExpression(),
+    new \Pinoven\Routing\Router\RouteExpression\DigitBracesRouteExpression()
+];
+$matcher = new \Pinoven\Routing\Router\RouteMatcher($defaultExpressions);
+
+// $routeRequestData can be a RouteRequest or whatever you want to use to check if the route match with routing request. 
+$routeRequestData = new \Pinoven\Routing\Router\RouteRequest\RouteRequest('https://www.test.com/test');
+// It will return an empty array or with attributes or null if nothing matches.
+$matcher->match($routeRequestData, $route);
+```
 
 ## Router
+
+```php
+// Default expressions that can be used as delimiter for attributes.
+$defaultExpressions = [
+    new \Pinoven\Routing\Router\RouteExpression\BracesRouteExpression(),
+    new \Pinoven\Routing\Router\RouteExpression\DigitBracesRouteExpression()
+];
+$matcher = new \Pinoven\Routing\Router\RouteMatcher($defaultExpressions);
+$router = new \Pinoven\Routing\Router\Router($matcher);
+
+// Default route matcher can be change
+$routeMatcher = new class implements \Pinoven\Routing\Router\RouteMatcherInterface {
+     public function getRouteExpressions() : array{
+    }
+    public function match($routeData,\Pinoven\Routing\Route\RouteInterface $route) : ?array{
+  
+    }
+};
+// must implement RoutMatcherInterface
+$router->setMatchRouteStrategy($routeMatcher);
+```
+
 
 # Contribution
  - Create issue: improvement + the reason why it should be implemented or issue + how to reproduce.
