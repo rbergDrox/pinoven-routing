@@ -142,6 +142,10 @@ That one implements :
 ```
 
 # Contribution
+
+Route methods(add, remove, find, findOne, get) should use  strategy. We able to  implement whatever w want here such  as collection.
+
+# Contribution
  - Create issue: improvement + the reason why it should be implemented or issue + how to reproduce.
  - Create pull request  and explain the issue.
  
